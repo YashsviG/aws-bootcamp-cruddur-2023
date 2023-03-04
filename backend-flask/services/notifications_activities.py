@@ -1,7 +1,17 @@
 from datetime import datetime, timedelta, timezone
+from aws_xray_sdk.core import xray_recorder
+
 class NotificationsActivities:
+  
   def run():
+    segment = xray_recorder.begin_subsegment('notifications-activities-run')
     now = datetime.now(timezone.utc).astimezone()
+    
+    # dict = {
+    #   "now": now.isoformat()
+    # }
+    segment.put_annotation('notifications-time-now', now.isoformat())
+
     results = [{
       'uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
       'handle':  'AWS BOOTCAMP',
@@ -23,4 +33,6 @@ class NotificationsActivities:
       }],
     }
     ]
+    xray_recorder.end_subsegment()
     return results
+  
